@@ -1,0 +1,12 @@
+/.idea/*
+
+# created docs
+/output/docs/*
+/docs/*
+
+# enviroment
+/venv/*
+
+# files for/after generation EXE
+/genDocx.spec
+/build/*
