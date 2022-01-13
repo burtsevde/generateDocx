@@ -5,20 +5,19 @@ from docx.table import _Cell
 from docx.text.run import Run
 
 
-def add_mergfield(field_name: str, run=None, **kwargs) -> Run:
+def add_mergfield(field_name: str, **kwargs) -> Run:
     '''
     Add mergfield in docx.text.run
 
     Usage: add_mergfield(
         'str',
-        None,
         before='text',
         after='text'
     )
 
     :param field_name: the name of new field
-    :param run: run where you need to set mergfiled OR |None| if you want to create a new run
     :param kwargs:
+        run = run where you need to set mergfiled;
         format = one of |Upper|, |Lower|, |FirstCap|, |TitleCase|;
         before = text before field;
         after = text after field;
@@ -26,7 +25,9 @@ def add_mergfield(field_name: str, run=None, **kwargs) -> Run:
         vertical = True - vertical format
     :return: Run with added mergfiled
     '''
-    if run is None:
+    if 'run' in kwargs:
+        run = kwargs['run']
+    else:
         run = Document().add_paragraph('').add_run()._r
 
     field_option = ''
