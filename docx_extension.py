@@ -5,11 +5,11 @@ from docx.table import _Cell
 from docx.text.run import Run
 
 
-def add_mergfield(field_name: str, **kwargs) -> Run:
+def add_mergefield(field_name: str, **kwargs) -> Run:
     '''
-    Add mergfield in docx.text.run
+    Add mergefield in docx.text.run
 
-    Usage: add_mergfield(
+    Usage: add_mergefield(
         'str',
         before='text',
         after='text'

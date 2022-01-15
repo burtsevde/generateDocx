@@ -10,3 +10,6 @@
 # files for/after generation EXE
 /genDocx.spec
 /build/*
+
+#temp xlsx
+/~$Конструктор.xlsx
