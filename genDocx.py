@@ -14,18 +14,28 @@ new_doc_path = os.path.join(path, 'docs')
 if not os.path.exists(new_doc_path):
     os.makedirs(new_doc_path)
 
+file_dir = "files_for_release"
 file_name = 'Конструктор.xlsx'
 
-df = pd.read_excel(file_name, engine='openpyxl', sheet_name='data', dtype={'a': np.str_})
-setting = pd.read_excel(file_name, engine='openpyxl', sheet_name='Settings', index_col=0)
+def get_data(file_path:str):
+    df = pd.read_excel(file_path, engine='openpyxl', sheet_name='data', dtype={'a': np.str_})
+    setting = pd.read_excel(file_path, engine='openpyxl', sheet_name='Settings', index_col=0)
+    return df, setting
+
+try:
+    df, setting = get_data(file_name)
+    dev = 0
+except OSError as err:
+    df, setting = get_data(file_dir+'/'+file_name)
+    dev = 1
 
 documents = df.columns.to_list()
 
 for index in range(len(documents)):
-    if documents[index] in ['p', 'RU', 'EN', 'fixOrNot', 'Zayavka']:
+    if documents[index] in ['p', 'RU', 'EN']:
         continue
 
-    df1 = df[(df[documents[index]] == "да") & (df['Zayavka'] == 'заявление о присоединении')]
+    df1 = df[(df[documents[index]] == "да")]
 
     document = Document()
 
@@ -98,8 +108,12 @@ for index in range(len(documents)):
 
     # sign_too
     t = table_sign.rows[1].cells[1].add_table(rows=2, cols=1)
-    t.rows[0].cells[0].paragraphs[0].add_run('').add_picture(
-        setting.loc['SignBusiness_pic']['value'],  width=Cm(3), height=Cm(3))
+    if dev == 1:
+        t.rows[0].cells[0].paragraphs[0].add_run('').add_picture(
+            file_dir+'/'+setting.loc['SignBusiness_pic']['value'],  width=Cm(3), height=Cm(3))
+    else:
+        t.rows[0].cells[0].paragraphs[0].add_run('').add_picture(
+            setting.loc['SignBusiness_pic']['value'], width=Cm(3), height=Cm(3))
     t.rows[0].cells[0].paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
     text_stylization(t.rows[1].cells[0].paragraphs[0], setting.loc['SignBusiness_fio']['value'])
     set_cell_border(
@@ -108,5 +122,3 @@ for index in range(len(documents)):
     )
 
     document.save(os.path.join(new_doc_path, documents[index]) + '.docx') # Save document
-
-    # pyinstaller --noconfirm --onefile --console  "genDocx.py" --distpath 'output' --clean

@@ -11,6 +11,8 @@
 /genDocx.spec
 /build/*
 
+/release*
+
 #temp xlsx
 /~$Конструктор.xlsx
 /output/~$Конструктор.xlsx
